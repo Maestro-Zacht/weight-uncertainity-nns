@@ -172,7 +172,7 @@ Hyperparameter tuning is done using a grid search on the parameters listed in th
     \item Prior 2 negative log standard deviation $- \log \sigma_2$: $6$, $7$, $8$
     \item Number of Monte Carlo samples: $1$, $2$, $3$, $5$
 \end{itemize}
-The values are the very same as in the paper, except for the number of Monte Carlo samples. I found 10 to always perform worse, so I changed the 10 to a 3 to allow more fine selection in lower values.
+The values are the very same as in the paper, except for the number of Monte Carlo samples. I found 10 to always perform worse, so I changed the 10 to a 3 to allow finer selection in lower values.
 
 The best hyperparameters found are:
 \begin{itemize}
@@ -192,9 +192,13 @@ The model is then trained for 50 epochs on the whole training dataset of 60,000 
     \label{fig:mnist-test-error}
 \end{figure}
 
-\subsection{Problems encountered}
+\subsection{Discussion and problems encountered}
 
-TODO
+The results are similar in shape to the ones presented in the paper, but they differ of 1 order of magnitude in the values. Training for more epochs did not lead to better results, and the model was clearing overfitting and reaching up to 40\% test error rate. This is likely due to implementation details and tricks that the authors used to improve the performance.
+
+Another aspect that was not mentioned in the paper is the weight initialization. The authors do not specify how the weights are initialized and some of them lead to very poor results, even random guessing (90\% test error rate). After some trial and error, I found that initializing the weights with a normal distribution with arbitrary mean and standard deviation proportional to the size of the layer was a good choice.
+
+Additionally, the two different ways to compute the KL divergence weight in the cost function are not interchangeable. While the first one leads to a good performance most of the times, the second one sometimes even leads to exploding gradients and model parameters going to $NaN$. Due to this behaviour, I decided to use the first one only.
 
 % \section{Submission of papers to NeurIPS 2024}
 
