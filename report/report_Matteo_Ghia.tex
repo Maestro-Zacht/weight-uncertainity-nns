@@ -81,7 +81,7 @@ In Bayesian inference for neural networks, weights are a posterior distribution 
 Variational learning is the process of finding the parameters $\theta$ of the weight distribution which minimize the Kullback-Leibler divergence with the true posterior distribution. This is done by maximizing the evidence lower bound (ELBO), which is a lower bound on the log-likelihood of the data given the model. The ELBO can be expressed as:
 
 \[
-    F(D, \theta) = KL[q(w | \theta) || P(w)] - \mathbb{E}_{q(w | \theta)}[\log P(D | w)]
+    \mathcal{F}(D, \theta) = \mathrm{KL}[q(w | \theta) || P(w)] - \mathbb{E}_{q(w | \theta)}[\log P(D | w)]
 \]
 
 The first term is the KL divergence between the approximate posterior distribution $q(w | \theta)$ and the prior distribution $P(w)$, while the second term is the expected log-likelihood of the data given the weights. The first one encourages the approximate posterior to be close to the prior, while the second one encourages the weights to be such that the data is well explained by the model.
@@ -93,7 +93,7 @@ Minimizing exactly the ELBO is computationally unfeasible, thus gradient descent
 Previous work mentioned in the paper has used the re-parametrization trick to learn the parameters of stochastic hiddend units, but this paper extends the algorithm to the weights of the neural network, making this optimization problem several orders of magnitude larger. Moreover, the paper approximates the exact cost to
 
 \[
-    F(D, \theta) \approx \sum_{i=1}^{n} \log q(w^{(i)} | \theta) - \log P(w^{(i)}) - \log P(D | w^{(i)})
+    \mathcal{F}(D, \theta) \approx \sum_{i=1}^{n} \log q(w^{(i)} | \theta) - \log P(w^{(i)}) - \log P(D | w^{(i)})
 \]
 
 All the terms depend on the Monte Carlo sampled weights $w^{(i)}$, which is a variance reduction technique called common random numbers.
@@ -122,13 +122,13 @@ where $\pi$ is the mixing parameter which controls the proportion of the two Gau
 The ELBO cost function can be used in minibatch optimization by re-weighting the KL divergence term. There are two proposal of weights, the first one being
 
 \[
-    \frac{1}{M} KL[q(w | \theta) || P(w)]
+    \frac{1}{M} \mathrm{KL}[q(w | \theta) || P(w)]
 \]
 
 where $M$ is the number of minibatches; the second one is
 
 \[
-    \pi_i KL[q(w | \theta) || P(w)]
+    \pi_i \mathrm{KL}[q(w | \theta) || P(w)]
 \]
 
 where $\pi_i$ is the weight of the $i$-th minibatch. This allows placing non uniform weights on the minibatches, and the paper proposes the following form of $\pi_i$:
@@ -148,7 +148,7 @@ One technique that allows to trade between exploration and best choices is Thomp
 
 \section{Reproduction of the MNIST classification experiment}
 
-In this section I will describe the reproduction of the MNIST classification experiment proposed in the paper.
+In this section I will describe the reproduction of the MNIST classification experiment proposed in the paper. The code is available on GitHub at \url{https://github.com/Maestro-Zacht/weight-uncertainty-nns/blob/main/experiment.ipynb}.
 
 \subsection{Dataset and data preprocessing}
 
@@ -200,6 +200,7 @@ Another aspect that was not mentioned in the paper is the weight initialization.
 
 Additionally, the two different ways to compute the KL divergence weight in the cost function are not interchangeable. While the first one leads to a good performance most of the times, the second one sometimes even leads to exploding gradients and model parameters going to $NaN$. Due to this behaviour, I decided to use the first one only.
 
+Similarly, also the optimizer is not well specified in the paper. It is mentioned that the SGD optimizer is used, but not which of its variants. Using PyTorch's plain SGD optimizer leads to weights going to $NaN$ most of the time, while using Adam is more reliable.
 % \section{Submission of papers to NeurIPS 2024}
 
 
