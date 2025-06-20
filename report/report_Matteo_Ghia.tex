@@ -194,7 +194,7 @@ The model is then trained for 50 epochs on the whole training dataset of 60,000 
 
 \subsection{Discussion and problems encountered}
 
-The results are similar in shape to the ones presented in the paper, but they differ of 1 order of magnitude in the values. Training for more epochs did not lead to better results, and the model was clearing overfitting and reaching up to 40\% test error rate. This is likely due to implementation details and tricks that the authors used to improve the performance.
+The results are similar in shape to the ones presented in the paper, but they differ of one order of magnitude in the values. Training for more epochs did not lead to better results, and the model was clearing overfitting and reaching up to 40\% test error rate. This is likely due to implementation details and tricks that the authors used to improve the performance.
 
 Another aspect that was not mentioned in the paper is the weight initialization. The authors do not specify how the weights are initialized and some of them lead to very poor results, even random guessing (90\% test error rate). After some trial and error, I found that initializing the weights with a normal distribution with arbitrary mean and standard deviation proportional to the size of the layer was a good choice.
 
